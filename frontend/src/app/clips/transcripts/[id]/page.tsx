@@ -28,7 +28,7 @@ export default function TranscriptDetailPage() {
     const res = await axios.get(`/api/clips/transcripts/${id}`);
     setData(res.data);
 
-    // ✅ PENTING: ambil durasi video
+    // ✅ DURASI VIDEO (detik)
     if (typeof res.data.duration === "number") {
       setVideoDuration(res.data.duration);
     }
@@ -40,7 +40,7 @@ export default function TranscriptDetailPage() {
   };
 
   /* =========================
-     BATCH GENERATE
+     BATCH GENERATE (FIXED)
   ==========================*/
   const handleGenerate = async () => {
     if (!data?._id) return;
@@ -58,7 +58,7 @@ export default function TranscriptDetailPage() {
       return;
     }
 
-    if (!videoDuration || videoDuration <= batchPreset) {
+    if (!videoDuration || videoDuration <= 0) {
       alert("Durasi video tidak valid");
       return;
     }
@@ -66,23 +66,26 @@ export default function TranscriptDetailPage() {
     try {
       setGenerating(true);
 
-      // 🔥 BUAT SEGMENTS DARI SELURUH VIDEO
       const segments: { startTime: number; endTime: number }[] = [];
       let cursor = 0;
 
-      while (cursor + batchPreset <= videoDuration) {
+      // ✅ FIX UTAMA: TIDAK ADA CLIP YANG HILANG
+      while (cursor < videoDuration) {
+        const end = Math.min(cursor + batchPreset, videoDuration);
+
         segments.push({
           startTime: cursor,
-          endTime: cursor + batchPreset,
+          endTime: end,
         });
-        cursor += batchPreset;
+
+        cursor = end;
       }
 
-      console.log("TOTAL SEGMENTS:", segments.length);
+      console.log("SEGMENTS GENERATED:", segments);
 
       await axios.post("/api/clips/generate", {
         transcriptId,
-        exportPlatform: "tiktok", // default preset
+        exportPlatform: "tiktok",
         segments,
       });
 
@@ -105,9 +108,11 @@ export default function TranscriptDetailPage() {
     <main style={{ padding: 24, maxWidth: 720 }}>
       <h1>{data.originalFilename}</h1>
       <p>Status: {data.status}</p>
-      <p>Durasi video: {Math.floor(videoDuration / 60)} menit</p>
+      <p>
+        Durasi video: {Math.floor(videoDuration / 60)}:
+        {(videoDuration % 60).toString().padStart(2, "0")}
+      </p>
 
-      {/* ===== BATCH PRESET ===== */}
       <h2 style={{ marginTop: 24 }}>Batch Generate</h2>
 
       <div style={{ marginTop: 8 }}>
@@ -150,7 +155,6 @@ export default function TranscriptDetailPage() {
           : "Pilih preset"}
       </button>
 
-      {/* ===== CLIPS ===== */}
       <h2 style={{ marginTop: 32 }}>Clips ({clips.length})</h2>
 
       {clips.length === 0 && <p>Belum ada clip</p>}
