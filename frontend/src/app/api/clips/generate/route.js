@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb";
 import { spawn } from "child_process";
 import path from "path";
 import fs from "fs";
+import os from "os";
 import { EXPORT_PRESETS } from "@/lib/presets/exportPresets";
 
 export async function POST(req) {
@@ -62,7 +63,7 @@ export async function POST(req) {
     }
 
     /* =========================
-       OUTPUT DIR
+       OUTPUT DIR (PUBLIC)
     ==========================*/
     const outputDir = path.resolve(process.cwd(), "public", "clips");
     if (!fs.existsSync(outputDir)) {
@@ -70,70 +71,99 @@ export async function POST(req) {
     }
 
     /* =========================
-       PROCESS SEGMENTS
+       TMP DIR (NO SPACES)
+    ==========================*/
+    const tmpDir = path.join(os.tmpdir(), "vinci-clips");
+    if (!fs.existsSync(tmpDir)) {
+      fs.mkdirSync(tmpDir, { recursive: true });
+    }
+
+    /* =========================
+       PROCESS SEGMENTS (BATCH)
     ==========================*/
     for (const seg of segments) {
       const startTime = Number(seg.startTime);
       const endTime = Number(seg.endTime);
 
-      if (Number.isNaN(startTime) || Number.isNaN(endTime) || endTime <= startTime) {
-        throw new Error(`Invalid segment: ${JSON.stringify(seg)}`);
+      if (
+        Number.isNaN(startTime) ||
+        Number.isNaN(endTime) ||
+        endTime <= startTime
+      ) {
+        continue;
       }
 
-      const rawDuration = endTime - startTime;
-      const duration = Math.min(rawDuration, preset.maxDuration);
+      const duration = Math.min(endTime - startTime, preset.maxDuration);
 
       const clipId = new ObjectId();
-      const filename = `clip-${clipId.toString()}.mp4`;
-      const outputPath = path.join(outputDir, filename);
-      const videoUrl = `/clips/${filename}`;
+      const rawOutput = path.join(outputDir, `clip-${clipId}.mp4`);
+      const finalOutput = path.join(outputDir, `clip-${clipId}_sub.mp4`);
+      const videoUrl = `/clips/clip-${clipId}_sub.mp4`;
 
-      /* =========================
-         🎬 VIDEO FILTER (CENTERED)
-         - NO CROP
-         - LETTERBOX
-      ==========================*/
-      const videoFilter = `
-scale=${preset.width}:-2:force_original_aspect_ratio=decrease,
-pad=${preset.width}:${preset.height}:(ow-iw)/2:(oh-ih)/2:black
-`.replace(/\s+/g, "");
-
+      /* === GENERATE CLIP === */
       await new Promise((resolve, reject) => {
-        const ffmpeg = spawn("ffmpeg", [
+        spawn("ffmpeg", [
           "-y",
           "-ss", String(startTime),
           "-i", inputPath,
           "-t", String(duration),
-          "-vf", videoFilter,
+          "-vf",
+          `scale=${preset.width}:-2:force_original_aspect_ratio=decrease,pad=${preset.width}:${preset.height}:(ow-iw)/2:(oh-ih)/2:black`,
           "-r", String(preset.fps),
           "-c:v", "libx264",
           "-pix_fmt", "yuv420p",
-          "-profile:v", "main",
-          "-level", "4.1",
-          "-b:v", preset.videoBitrate,
           "-c:a", "aac",
-          "-b:a", preset.audioBitrate,
-          "-movflags", "+faststart",
-          outputPath,
-        ]);
-
-        ffmpeg.stderr.on("data", (d) =>
-          console.log("FFMPEG:", d.toString())
-        );
-
-        ffmpeg.on("close", (code) => {
-          if (code === 0) resolve();
-          else reject(new Error(`FFmpeg exited with ${code}`));
-        });
+          rawOutput,
+        ]).on("close", (c) => (c === 0 ? resolve() : reject()));
       });
 
-      if (!fs.existsSync(outputPath)) {
-        throw new Error("FFmpeg output not created");
+      if (!fs.existsSync(rawOutput)) continue;
+
+      /* === SUBTITLE === */
+      const subtitleScript = path.resolve(
+        process.cwd(),
+        "tools",
+        "subtitle",
+        "subtitle.py"
+      );
+
+      const srtOriginal = rawOutput.replace(".mp4", ".srt");
+      const srtTmp = path.join(tmpDir, "sub.srt");
+      const tmpOut = path.join(tmpDir, "out.mp4");
+
+      try {
+        // generate srt
+        await new Promise((resolve, reject) => {
+          spawn("python", [
+            subtitleScript,
+            rawOutput,
+            srtOriginal,
+          ]).on("close", (c) => (c === 0 ? resolve() : reject()));
+        });
+
+        fs.copyFileSync(srtOriginal, srtTmp);
+
+        // 🔑 BURN SUBTITLE (force_style DI-QUOTE)
+        await new Promise((resolve, reject) => {
+          spawn(
+            "ffmpeg",
+            [
+              "-y",
+              "-i", rawOutput,
+              "-vf",
+              "subtitles=sub.srt:force_style='Fontsize=28,Outline=2,Shadow=1,Alignment=2'",
+              "-c:a", "copy",
+              "out.mp4",
+            ],
+            { cwd: tmpDir }
+          ).on("close", (c) => (c === 0 ? resolve() : reject()));
+        });
+
+        fs.copyFileSync(tmpOut, finalOutput);
+      } catch {
+        fs.copyFileSync(rawOutput, finalOutput);
       }
 
-      /* =========================
-         SAVE CLIP
-      ==========================*/
       await db.collection("clips").insertOne({
         _id: clipId,
         transcriptId: new ObjectId(transcriptId),
@@ -149,9 +179,9 @@ pad=${preset.width}:${preset.height}:(ow-iw)/2:(oh-ih)/2:black
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("GENERATE ERROR:", err);
+    console.error(err);
     return NextResponse.json(
-      { error: err.message || "Failed generate clip" },
+      { error: err.message || "Generate failed" },
       { status: 500 }
     );
   }
