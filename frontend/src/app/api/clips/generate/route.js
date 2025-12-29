@@ -119,51 +119,74 @@ export async function POST(req) {
 
       if (!fs.existsSync(rawOutput)) continue;
 
-      /* === SUBTITLE === */
-      const subtitleScript = path.resolve(
-        process.cwd(),
-        "tools",
-        "subtitle",
-        "subtitle.py"
-      );
+/* === SUBTITLE (ASS KARAOKE – WINDOWS FINAL FIX) === */
+const subtitleScript = path.resolve(
+  process.cwd(),
+  "tools",
+  "subtitle",
+  "subtitle.py"
+);
 
-      const srtOriginal = rawOutput.replace(".mp4", ".srt");
-      const srtTmp = path.join(tmpDir, "sub.srt");
-      const tmpOut = path.join(tmpDir, "out.mp4");
+const assPath = rawOutput.replace(".mp4", ".ass");
 
-      try {
-        // generate srt
-        await new Promise((resolve, reject) => {
-          spawn("python", [
-            subtitleScript,
-            rawOutput,
-            srtOriginal,
-          ]).on("close", (c) => (c === 0 ? resolve() : reject()));
-        });
+// 🔑 PENTING: nama sederhana TANPA PATH
+const assTmp = path.join(tmpDir, `sub-${clipId}.ass`);
+const tmpOut = path.join(tmpDir, `out-${clipId}.mp4`);
 
-        fs.copyFileSync(srtOriginal, srtTmp);
+try {
+  /* 1️⃣ Generate ASS */
+  await new Promise((resolve, reject) => {
+    const py = spawn("python", [
+      subtitleScript,
+      rawOutput,
+      assPath,
+      exportPlatform,
+    ]);
 
-        // 🔑 BURN SUBTITLE (force_style DI-QUOTE)
-        await new Promise((resolve, reject) => {
-          spawn(
-            "ffmpeg",
-            [
-              "-y",
-              "-i", rawOutput,
-              "-vf",
-              "subtitles=sub.srt:force_style='Fontsize=28,Outline=2,Shadow=1,Alignment=2'",
-              "-c:a", "copy",
-              "out.mp4",
-            ],
-            { cwd: tmpDir }
-          ).on("close", (c) => (c === 0 ? resolve() : reject()));
-        });
+    py.stderr.on("data", (d) =>
+      console.error("SUB PY:", d.toString())
+    );
 
-        fs.copyFileSync(tmpOut, finalOutput);
-      } catch {
-        fs.copyFileSync(rawOutput, finalOutput);
-      }
+    py.on("close", (c) =>
+      c === 0 ? resolve() : reject(new Error("Subtitle gen failed"))
+    );
+  });
 
+  if (!fs.existsSync(assPath)) {
+    throw new Error("ASS subtitle not generated");
+  }
+
+  /* 2️⃣ COPY ASS → TMP (HILANGKAN PATH WINDOWS) */
+  fs.copyFileSync(assPath, assTmp);
+
+  /* 3️⃣ Burn subtitle (PAKAI NAMA FILE SAJA) */
+  await new Promise((resolve, reject) => {
+    const burn = spawn(
+      "ffmpeg",
+      [
+        "-y",
+        "-i", rawOutput,
+        "-vf", `ass=${path.basename(assTmp)}`,
+        "-c:a", "copy",
+        path.basename(tmpOut),
+      ],
+      { cwd: tmpDir }
+    );
+
+    burn.stderr.on("data", (d) =>
+      console.log("BURN:", d.toString())
+    );
+
+    burn.on("close", (c) =>
+      c === 0 ? resolve() : reject(new Error("Burn failed"))
+    );
+  });
+
+  fs.copyFileSync(tmpOut, finalOutput);
+} catch (err) {
+  console.error("Subtitle failed, fallback:", err);
+  fs.copyFileSync(rawOutput, finalOutput);
+}
       await db.collection("clips").insertOne({
         _id: clipId,
         transcriptId: new ObjectId(transcriptId),
