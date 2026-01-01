@@ -8,21 +8,21 @@ from faster_whisper import WhisperModel
 SUBTITLE_PRESETS = {
     "tiktok": {
         "words_per_phrase": 2,
-        "font_size": 44,
-        "margin_v": 80
+        "font_size": 150,
+        "margin_v": 260
     },
     "reels": {
         "words_per_phrase": 3,
-        "font_size": 48,
-        "margin_v": 60
+        "font_size": 150,
+        "margin_v": 260
     }
 }
 
 # =========================
-# COLOR CONFIG (ASS FORMAT)
+# COLOR CONFIG (ASS)
 # =========================
-ACTIVE_COLOR = "&H00FFFF&"    # kuning
-PASSIVE_COLOR = "&HAAAAAA&"   # abu-abu
+ACTIVE_COLOR = "&H00FFFF&"    # KUNING
+PASSIVE_COLOR = "&HAAAAAA&"   # ABU-ABU
 OUTLINE_COLOR = "&H000000&"
 
 # =========================
@@ -47,16 +47,22 @@ if not os.path.exists(input_video):
     sys.exit(1)
 
 # =========================
+# TEXT NORMALIZER
+# =========================
+def normalize(text: str) -> str:
+    return text.upper().strip()
+
+# =========================
 # ASS TIME FORMAT
 # =========================
-def ass_time(t):
+def ass_time(t: float) -> str:
     h = int(t // 3600)
     m = int((t % 3600) // 60)
     s = t % 60
     return f"{h}:{m:02}:{s:05.2f}"
 
 # =========================
-# INIT MODEL (CPU SAFE)
+# INIT WHISPER (CPU SAFE)
 # =========================
 print("WHISPER START")
 sys.stdout.flush()
@@ -68,7 +74,7 @@ model = WhisperModel(
 )
 
 # =========================
-# TRANSCRIBE (WORD TIMESTAMPS)
+# TRANSCRIBE
 # =========================
 segments, _ = model.transcribe(
     input_video,
@@ -78,7 +84,7 @@ segments, _ = model.transcribe(
 )
 
 # =========================
-# ASS HEADER (VALID)
+# ASS HEADER (VALID & SAFE)
 # =========================
 ass_header = f"""[Script Info]
 ScriptType: v4.00+
@@ -87,15 +93,15 @@ PlayResY: 1920
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Passive,Segoe UI,{FONT_SIZE},{PASSIVE_COLOR},{OUTLINE_COLOR},&H000000&,0,0,0,0,100,100,0,0,1,2,1,2,60,60,{MARGIN_V},1
-Style: Active,Segoe UI,{FONT_SIZE},{ACTIVE_COLOR},{OUTLINE_COLOR},&H000000&,0,0,0,0,100,100,0,0,1,2,1,2,60,60,{MARGIN_V},1
+Style: Passive,Poppins-Bold,{FONT_SIZE},{PASSIVE_COLOR},{OUTLINE_COLOR},&H000000&,0,0,0,0,100,100,0,0,1,2,1,2,40,40,{MARGIN_V},1
+Style: Active,Poppins-Bold,{FONT_SIZE},{ACTIVE_COLOR},{OUTLINE_COLOR},&H000000&,0,0,0,0,100,100,0,0,1,2,1,2,40,40,{MARGIN_V},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
 
 # =========================
-# WRITE ASS (VALID + KARAOKE)
+# WRITE ASS (KARAOKE)
 # =========================
 with open(output_ass, "w", encoding="utf-8") as f:
     f.write(ass_header)
@@ -104,10 +110,9 @@ with open(output_ass, "w", encoding="utf-8") as f:
         if not seg.words:
             continue
 
-        words = seg.words
         buffer = []
 
-        for w in words:
+        for w in seg.words:
             buffer.append(w)
 
             if len(buffer) == WORDS_PER_PHRASE:
@@ -116,16 +121,14 @@ with open(output_ass, "w", encoding="utf-8") as f:
 
                 parts = []
                 for i, ww in enumerate(buffer):
+                    word = normalize(ww.word)
                     if i == len(buffer) - 1:
-                        parts.append(f"{{\\rActive}}{ww.word}")
+                        parts.append(f"{{\\rActive}}{word}")
                     else:
-                        parts.append(f"{{\\rPassive}}{ww.word}")
+                        parts.append(f"{{\\rPassive}}{word}")
 
                 text = " ".join(parts)
-                f.write(
-                    f"Dialogue: 0,{start},{end},Passive,,0,0,0,,{text}\n"
-                )
-
+                f.write(f"Dialogue: 0,{start},{end},Passive,,0,0,0,,{text}\n")
                 buffer = []
 
         # sisa kata
@@ -135,15 +138,14 @@ with open(output_ass, "w", encoding="utf-8") as f:
 
             parts = []
             for i, ww in enumerate(buffer):
+                word = normalize(ww.word)
                 if i == len(buffer) - 1:
-                    parts.append(f"{{\\rActive}}{ww.word}")
+                    parts.append(f"{{\\rActive}}{word}")
                 else:
-                    parts.append(f"{{\\rPassive}}{ww.word}")
+                    parts.append(f"{{\\rPassive}}{word}")
 
             text = " ".join(parts)
-            f.write(
-                f"Dialogue: 0,{start},{end},Passive,,0,0,0,,{text}\n"
-            )
+            f.write(f"Dialogue: 0,{start},{end},Passive,,0,0,0,,{text}\n")
 
-print(f"ASS karaoke subtitle generated ({preset_name}): {output_ass}")
+print(f"ASS subtitle generated ({preset_name}): {output_ass}")
 sys.stdout.flush()

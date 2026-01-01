@@ -83,11 +83,18 @@ export default function TranscriptDetailPage() {
 
       console.log("SEGMENTS GENERATED:", segments);
 
-      await axios.post("/api/clips/generate", {
-        transcriptId,
-        exportPlatform: "tiktok",
-        segments,
-      });
+   await axios.post(
+  "/api/clips/generate",
+  {
+    transcriptId,
+    exportPlatform: "tiktok",
+    segments,
+  },
+  {
+    timeout: 0, // ⏱️ PENTING: tunggu proses lama
+  }
+);
+
 
       await loadClips(transcriptId);
       alert(`Batch generate selesai (${segments.length} clip)`);
