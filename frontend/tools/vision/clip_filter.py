@@ -2,7 +2,7 @@ from typing import List, Dict
 import math
 
 
-MIN_DURATION = 1.0
+MIN_DURATION = 120.0
 MAX_DURATION = 180.0
 MIN_SCORE = 4
 MAX_CLIPS_PER_10_MIN = 4

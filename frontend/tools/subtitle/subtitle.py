@@ -1,21 +1,21 @@
 import sys
 import os
-from faster_whisper import WhisperModel
 import json
-
+import re
+from faster_whisper import WhisperModel
 
 # =========================
 # SUBTITLE PRESETS
 # =========================
 SUBTITLE_PRESETS = {
     "tiktok": {
-        "words_per_phrase": 2,
+        "max_chars": 16,
         "font_size": 100,
         "margin_v": 260,
         "margin_h": 80
     },
     "reels": {
-        "words_per_phrase": 2,
+        "max_chars": 18,
         "font_size": 120,
         "margin_v": 260,
         "margin_h": 80
@@ -25,24 +25,24 @@ SUBTITLE_PRESETS = {
 # =========================
 # COLOR CONFIG (ASS)
 # =========================
-ACTIVE_COLOR = "&H00FFFF&"    # Kuning
-PASSIVE_COLOR = "&H00FFFF&"   # Kuning
+ACTIVE_COLOR = "&H00FFFF&"
+PASSIVE_COLOR = "&H00FFFF&"
 OUTLINE_COLOR = "&H000000&"
 
 # =========================
 # ARGUMENTS
 # =========================
 if len(sys.argv) < 3:
-    print("Usage: python subtitle.py <input_video> <output_ass> [preset]")
+    print("Usage: python subtitle.py <input_video> <output_ass> [preset] [--dump-segments]")
     sys.exit(1)
 
 input_video = sys.argv[1]
 output_ass = sys.argv[2]
-preset_name = sys.argv[3] if len(sys.argv) > 3 else "tiktok"
+preset_name = sys.argv[3] if len(sys.argv) > 3 and not sys.argv[3].startswith("--") else "tiktok"
+dump_segments = "--dump-segments" in sys.argv
 
 preset = SUBTITLE_PRESETS.get(preset_name, SUBTITLE_PRESETS["tiktok"])
-
-WORDS_PER_PHRASE = preset["words_per_phrase"]
+MAX_CHARS = preset["max_chars"]
 FONT_SIZE = preset["font_size"]
 MARGIN_V = preset["margin_v"]
 MARGIN_H = preset["margin_h"]
@@ -51,39 +51,38 @@ if not os.path.exists(input_video):
     print(f"Input file not found: {input_video}")
     sys.exit(1)
 
-dump_segments = "--dump-segments" in sys.argv
-segments_output_path = "tmp/segments.json"
-
 os.makedirs("tmp", exist_ok=True)
+segments_output_path = "tmp/segments.json"
 
 # =========================
 # HELPERS
 # =========================
-def normalize(text: str) -> str:
-    return text.upper().strip()
-
 def ass_time(t: float) -> str:
-    if t < 0:
-        t = 0
+    t = max(t, 0)
     h = int(t // 3600)
     m = int((t % 3600) // 60)
     s = t % 60
     return f"{h}:{m:02}:{s:05.2f}"
 
-def safe_word(word: str, max_len=10) -> str:
-    if len(word) > max_len:
-        mid = len(word) // 2
-        return word[:mid] + "\\N" + word[mid:]
-    return word
+def normalize(text: str) -> str:
+    return re.sub(r"\s+", " ", text.strip()).upper()
+
+def split_line(text: str, max_chars: int) -> str:
+    if len(text) <= max_chars:
+        return text
+    mid = len(text) // 2
+    left = text[:mid].rsplit(" ", 1)[0]
+    right = text[len(left):].strip()
+    return left + "\\N" + right
 
 # =========================
-# INIT WHISPER (CPU SAFE)
+# INIT WHISPER (HIGH ACCURACY)
 # =========================
-print("▶️ Transcribing audio (Whisper CPU)...")
+print("▶️ Transcribing audio (Whisper HIGH QUALITY)...")
 sys.stdout.flush()
 
 model = WhisperModel(
-    "small",
+    "large-v3",
     device="cpu",
     compute_type="int8"
 )
@@ -91,8 +90,11 @@ model = WhisperModel(
 segments, _ = model.transcribe(
     input_video,
     language="id",
+    beam_size=5,
+    best_of=5,
+    temperature=0.0,
     vad_filter=True,
-    vad_parameters=dict(min_silence_duration_ms=300),
+    vad_parameters=dict(min_silence_duration_ms=200),
     word_timestamps=True
 )
 
@@ -101,17 +103,13 @@ segments, _ = model.transcribe(
 # =========================
 if dump_segments:
     simple_segments = []
-
     for seg in segments:
-        text = seg.text.strip() if seg.text else ""
-        if not text:
-            continue
-
-        simple_segments.append({
-            "start": round(seg.start, 2),
-            "end": round(seg.end, 2),
-            "text": text
-        })
+        if seg.text:
+            simple_segments.append({
+                "start": round(seg.start, 2),
+                "end": round(seg.end, 2),
+                "text": seg.text.strip()
+            })
 
     with open(segments_output_path, "w", encoding="utf-8") as jf:
         json.dump(simple_segments, jf, indent=2, ensure_ascii=False)
@@ -129,15 +127,14 @@ WrapStyle: 2
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Passive,Poppins-Bold,{FONT_SIZE},{PASSIVE_COLOR},{OUTLINE_COLOR},&H000000&,1,0,0,0,100,100,0,0,1,2,0,2,{MARGIN_H},{MARGIN_H},{MARGIN_V},1
-Style: Active,Poppins-Bold,{FONT_SIZE},{ACTIVE_COLOR},{OUTLINE_COLOR},&H000000&,1,0,0,0,100,100,0,0,1,2,0,2,{MARGIN_H},{MARGIN_H},{MARGIN_V},1
+Style: Default,Poppins-Bold,{FONT_SIZE},{ACTIVE_COLOR},{OUTLINE_COLOR},&H000000&,1,0,0,0,100,100,0,0,1,2,0,2,{MARGIN_H},{MARGIN_H},{MARGIN_V},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
 
 # =========================
-# WRITE ASS
+# WRITE ASS (PHRASE-BASED)
 # =========================
 with open(output_ass, "w", encoding="utf-8") as f:
     f.write(ass_header)
@@ -146,39 +143,34 @@ with open(output_ass, "w", encoding="utf-8") as f:
         if not seg.words:
             continue
 
-        buffer = []
+        phrase_words = []
+        phrase_start = None
 
         for w in seg.words:
-            buffer.append(w)
+            if phrase_start is None:
+                phrase_start = w.start
 
-            if len(buffer) == WORDS_PER_PHRASE:
-                start = ass_time(buffer[0].start)
-                end = ass_time(buffer[-1].end)
+            phrase_words.append(w.word)
 
-                parts = []
-                for i, ww in enumerate(buffer):
-                    word = safe_word(normalize(ww.word))
-                    if i == len(buffer) - 1:
-                        parts.append(f"{{\\rActive}}{word}")
-                    else:
-                        parts.append(f"{{\\rPassive}}{word}")
+            joined = normalize(" ".join(phrase_words))
 
-                f.write(f"Dialogue: 0,{start},{end},Passive,,0,0,0,,{' '.join(parts)}\n")
-                buffer = []
+            is_pause = w.end - w.start > 0.6
+            is_long = len(joined) >= MAX_CHARS
+            is_punct = re.search(r"[.!?]$", w.word)
 
-        if buffer:
-            start = ass_time(buffer[0].start)
-            end = ass_time(buffer[-1].end)
+            if is_pause or is_long or is_punct:
+                start = ass_time(phrase_start)
+                end = ass_time(w.end)
+                text = split_line(joined, MAX_CHARS)
+                f.write(f"Dialogue: 0,{start},{end},Default,,0,0,0,,{text}\n")
+                phrase_words = []
+                phrase_start = None
 
-            parts = []
-            for i, ww in enumerate(buffer):
-                word = safe_word(normalize(ww.word))
-                if i == len(buffer) - 1:
-                    parts.append(f"{{\\rActive}}{word}")
-                else:
-                    parts.append(f"{{\\rPassive}}{word}")
+        if phrase_words:
+            start = ass_time(phrase_start)
+            end = ass_time(seg.words[-1].end)
+            text = split_line(normalize(" ".join(phrase_words)), MAX_CHARS)
+            f.write(f"Dialogue: 0,{start},{end},Default,,0,0,0,,{text}\n")
 
-            f.write(f"Dialogue: 0,{start},{end},Passive,,0,0,0,,{' '.join(parts)}\n")
-
-print(f"✅ Subtitle ASS generated: {output_ass}")
+print(f"✅ High-quality subtitle generated: {output_ass}")
 sys.stdout.flush()
