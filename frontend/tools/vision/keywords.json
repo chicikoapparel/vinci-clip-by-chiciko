@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "language": "id",
+  "categories": {
+    "trigger": {
+      "weight": 2,
+      "keywords": [
+        "masalahnya",
+        "yang orang tidak sadar",
+        "yang jarang dibahas",
+        "yang paling penting",
+        "yang terjadi sebenarnya",
+        "kesalahan terbesar",
+        "hal yang sering dilupakan",
+        "yang banyak orang salah pahami",
+        "yang sering kita anggap sepele",
+        "yang tidak pernah dibicarakan","Bayangkan", "Berhenti", "Jangan", "Akhirnya", "Pantesan", "Ternyata", "Rahasia", "Bocoran", "Fatal",
+      "Eksklusif", "Hati-hati", "Viral", "Bongkar", "Terungkap", "Sadar", "Gagal", "Sukses", "Misteri", "Aneh",
+      "Langka", "Cuma", "Hanya", "Tercepat", "Termudah", "Gratis", "Skandal", "Kebenaran", "Kesalahan", "Pertama",
+      "Wajib", "Segera", "Penting", "Tersembunyi", "Ajaib", "Gila", "Mustahil", "Nyata", "Bukti", "Masih",
+      "Belum", "Tahu", "Luar biasa", "Jenius", "Simpel", "Efektif", "Ampuh", "Murah", "Mewah", "Sultan",
+      "Diskon", "Promo", "Terbatas", "Sekarang", "Terakhir", "Terupdate", "Trending", "Geger", "Heboh", "Terkejut",
+      "Syok", "Berubah", "Drastis", "Kilat", "Instan", "Otomatis", "Gratisan", "Hadiah", "Giveaway", "Menang",
+      "Juara", "Hebat", "Unik", "Teka-teki", "Kunci", "Rumus", "Teknik", "Trik", "Tips", "Cara",
+      "Panduan", "Tutorial", "Demo", "Review", "Rekomendasi", "Pilihan", "Terbaik", "Terburuk", "Termahal", "Termurah",
+      "Terkecil", "Terbesar", "Terbaru", "Tersulit", "Kenapa", "Bagaimana", "Mungkin", "Pasti", "Siap", "Mulai"
+      ]
+    },
+
+    "insight": {
+      "weight": 2,
+      "keywords": [
+        "artinya",
+        "maknanya",
+        "itu berarti",
+        "intinya",
+        "kesimpulannya",
+        "pelajarannya",
+        "makna terdalamnya",
+        "yang sebenarnya terjadi",
+        "implikasinya adalah",
+        "ini menunjukkan bahwa","Strategi", "Framework", "Step-by-step", "Struktur", "Metode", "Sistem", "Alur", "Pola", "Logika", "Konsep",
+      "Teori", "Fakta", "Data", "Statistik", "Riset", "Studi kasus", "Pengalaman", "Pelajaran", "Edukasi", "Informasi",
+      "Manfaat", "Keuntungan", "Kerugian", "Risiko", "Solusi", "Alternatif", "Perbandingan", "Analisis", "Evaluasi", "Definisi",
+      "Fungsi", "Tujuan", "Dampak", "Penyebab", "Akibat", "Proses", "Mekanisme", "Tools", "Aplikasi", "Website",
+      "Sumber", "Referensi", "Inspirasi", "Motivasi", "Mindset", "Kebiasaan", "Rutinitas", "Produktivitas", "Efisiensi", "Efektivitas",
+      "Kualitas", "Performa", "Skill", "Keahlian", "Bakat", "Potensi", "Peluang", "Tantangan", "Hambatan", "Terobosan",
+      "Inovasi", "Kreativitas", "Desain", "Estetika", "Visual", "Audio", "Konten", "Copywriting", "Marketing", "Branding",
+      "Jualan", "Profit", "Omzet", "Investasi", "Tabungan", "Keuangan", "Karir", "Bisnis", "Startup", "Freelance",
+      "Remote", "Digital", "Teknologi", "AI", "Algoritma", "Psikologi", "Komunikasi", "Negosiasi", "Kepemimpinan", "Manajemen",
+      "Organisasi", "Hubungan", "Sosial", "Kesehatan", "Lifestyle", "Traveling", "Kuliner", "Fashion", "Gadget", "Edukasi"
+      ]
+    },
+
+    "logic": {
+      "weight": 1,
+      "keywords": [
+        "karena",
+        "sebab",
+        "akibatnya",
+        "oleh karena itu",
+        "maka dari itu",
+        "logikanya",
+        "jika kita lihat",
+        "secara rasional",
+        "hubungannya adalah","Karena", "Maka", "Sehingga", "Oleh karena itu", "Alasannya", "Logikanya", "Faktanya", "Korelasi", "Signifikan", "Konsisten",
+      "Objektif", "Rasional", "Terbukti", "Valid", "Akurat", "Sistematis", "Empiris", "Analitis", "Kausalitas", "Prinsip",
+      "Fundamental", "Esensial", "Komprehensif", "Struktural", "Teknis", "Prosedural", "Metodis", "Kuantitatif", "Kualitatif", "Komparasi",
+      "Sesuai", "Tepat", "Efisien", "Optimal", "Fungsional", "Praktis", "Relevan", "Koheren", "Kredibel", "Otentik",
+      "Pasti", "Mutlak", "Konkrit", "Riil", "Terukur", "Teruji", "Standar", "Parameter", "Indikator", "Metrik",
+      "Data", "Grafik", "Tren", "Proyeksi", "Estimasi", "Kalkulasi", "Hitungan", "Rasio", "Persentase", "Skala",
+      "Urutan", "Tahapan", "Kronologi", "Hierarki", "Kategori", "Klasifikasi", "Komponen", "Elemen", "Variabel", "Aspek",
+      "Faktor", "Kondisi", "Situasi", "Konteks", "Perspektif", "Sudut pandang", "Landasan", "Dasar", "Inti", "Esensi",
+      "Output", "Input", "Hasil", "Dampak", "Pengaruh", "Efek", "Konsekuensi", "Solusi", "Jawaban", "Kesimpulan",
+      "Ringkasan", "Intisari", "Poin", "Argumen", "Premis", "Hipotesis", "Temuan", "Observasi", "Verifikasi", "Validasi"
+      ]
+    },
+
+    "emotion_positive": {
+      "weight": 1,
+      "keywords": [
+        "harapan",
+        "peluang",
+        "optimis",
+        "kesempatan",
+        "kabar baik",
+        "potensi besar",
+        "masa depan cerah","Bahagia", "Senang", "Bangga", "Haru", "Inspiratif", "Semangat", "Cinta", "Sayang", "Puas", "Lega",
+      "Bersyukur", "Optimis", "Percaya diri", "Damai", "Tenang", "Nyaman", "Seru", "Asyik", "Menarik", "Memukau",
+      "Hebat", "Luar biasa", "Keren", "Mantap", "Juara", "Berhasil", "Menang", "Untung", "Berkah", "Mulia",
+      "Tulus", "Ikhlas", "Sabar", "Ramah", "Sopan", "Peduli", "Empati", "Kebaikan", "Harapan", "Impian",
+      "Cita-cita", "Kesuksesan", "Keajaiban", "Keberuntungan", "Keindahan", "Cantik", "Ganteng", "Manis", "Indah", "Harmonis",
+      "Keluarga", "Sahabat", "Teman", "Kebersamaan", "Ceria", "Tertawa", "Senyum", "Gembira", "Takjub", "Kagum",
+      "Hormat", "Apresiasi", "Pujian", "Penghargaan", "Prestasi", "Hadiah", "Kejutan", "Nikmat", "Lezat", "Segar",
+      "Sehat", "Kuat", "Bugar", "Energi", "Vitalitas", "Kebebasan", "Merdeka", "Kaya", "Makmur", "Sejahtera",
+      "Cerdas", "Bijak", "Dewasa", "Mandiri", "Berani", "Tangguh", "Sakti", "Ajaib", "Idola", "Inspirasi",
+      "Teladan", "Pahlawan", "Anugerah", "Karunia", "Hidayah", "Cahaya", "Terang", "Surga", "Damai", "Abadi"
+      ]
+    },
+
+    "emotion_negative": {
+      "weight": 1,
+      "keywords": [
+        "takut",
+        "khawatir",
+        "bahaya",
+        "krisis",
+        "ancaman",
+        "kecewa",
+        "marah",
+        "frustasi",
+        "kegagalan","Takut", "Khawatir", "Cemas", "Sedih", "Kecewa", "Marah", "Kesal", "Benci", "Iri", "Dengki",
+      "Sombong", "Angkuh", "Gagal", "Rugi", "Menyesal", "Sakit", "Menderita", "Pahit", "Kejam", "Jahat",
+      "Buruk", "Jelek", "Kotor", "Hina", "Rendah", "Malu", "Bosan", "Jenuh", "Stres", "Depresi",
+      "Lelah", "Capek", "Letih", "Lemah", "Payah", "Bodoh", "Malas", "Miskin", "Susah", "Sulit",
+      "Bahaya", "Ancaman", "Teror", "Ngeri", "Seram", "Misterius", "Gelap", "Kelam", "Suram", "Pudar",
+      "Hancur", "Rusak", "Pecah", "Retak", "Hilang", "Lupa", "Salah", "Dosa", "Kiamat", "Mati",
+      "Tersiksa", "Tertekan", "Terancam", "Terjepit", "Terisolasi", "Kesepian", "Sendiri", "Asing", "Aneh", "Gila",
+      "Kacau", "Berantakan", "Ribut", "Konflik", "Perang", "Musuh", "Lawan", "Penghianat", "Palsu", "Bohong",
+      "Tipu", "Licik", "Curang", "Serakah", "Pelit", "Kikir", "Sengsara", "Pedih", "Luka", "Trauma",
+      "Phobia", "Was-was", "Gelisah", "Gemetar", "Pucat", "Lemas", "Tumbang", "Gugur", "Kalah", "Punah"
+      ]
+    },
+
+    "authority": {
+      "weight": 1,
+      "keywords": [
+        "menurut data",
+        "menurut riset",
+        "fakta menunjukkan",
+        "berdasarkan pengalaman",
+        "secara historis",
+        "dari sudut pandang ilmiah",
+        "penelitian membuktikan",
+        "secara empiris","Ahli", "Pakar", "Profesional", "Spesialis", "Dokter", "Guru", "Mentor", "Coach", "Master", "Legend",
+      "Resmi", "Legal", "Sertifikasi", "Lisensi", "Terakreditasi", "Terpercaya", "Kredibel", "Otoritas", "Pemimpin", "Bos",
+      "CEO", "Founder", "Owner", "Manajer", "Direktur", "Pejabat", "Tokoh", "Publik figur", "Artis", "Influencer",
+      "Ilmuwan", "Peneliti", "Profesor", "Doktor", "Sarjana", "Praktisi", "Senior", "Veteran", "Pengalaman", "Reputasi",
+      "Prestasi", "Penghargaan", "Pemenang", "Juara", "Terbaik", "Nomor 1", "Utama", "Pusat", "Inti", "Standar",
+      "Protokol", "Aturan", "Hukum", "Undang-undang", "Kebijakan", "Instruksi", "Komando", "Mandat", "Tugas", "Wewenang",
+      "Hak", "Kewajiban", "Tanggung jawab", "Disiplin", "Konsisten", "Komitmen", "Integritas", "Etika", "Moral", "Kualitas",
+      "Mutu", "Jaminan", "Garansi", "Segel", "Asli", "Original", "Otentik", "Murni", "Baku", "Pakem",
+      "Referensi", "Rujukan", "Kutipan", "Sumber", "Data", "Fakta", "Bukti", "Testimoni", "Portofolio", "Karya",
+      "Buku", "Jurnal", "Artikel", "Berita", "Laporan", "Analisis", "Riset", "Survei", "Sensus", "Statistik"
+      ]
+    },
+
+    "call_to_think": {
+      "weight": 2,
+      "keywords": [
+        "coba bayangkan",
+        "pertanyaannya",
+        "pikirkan ini",
+        "yang harus kita tanyakan",
+        "pernahkah kita berpikir",
+        "kalau kita renungkan",
+        "apa yang sebenarnya terjadi","Mengapa", "Kenapa", "Bagaimana jika", "Andai", "Seandainya", "Mungkinkah", "Benarkah", "Sudahkah", "Pernahkah", "Yakin?",
+      "Pikirkan", "Renungkan", "Bayangkan", "Pertimbangkan", "Evaluasi", "Tanya diri sendiri", "Apa gunanya", "Untuk apa", "Siapa tahu", "Coba tebak",
+      "Logis tidak?", "Masuk akal?", "Apa dasarnya?", "Mana buktinya?", "Apa dampaknya?", "Siapa korbannya?", "Siapa pemenangnya?", "Kapan berakhir?", "Dimana solusinya?", "Bagaimana caranya?",
+      "Apa bedanya?", "Apa hubungannya?", "Mana yang benar?", "Siapa yang salah?", "Apa tujuannya?", "Apa motifnya?", "Apa resikonya?", "Apa untungnya?", "Apa ruginya?", "Apa maknanya?",
+      "Coba ingat", "Coba lihat", "Coba rasakan", "Coba bandingkan", "Coba analisis", "Coba pahami", "Coba selami", "Coba telusuri", "Coba buktikan", "Coba perhatikan",
+      "Ada apa?", "Kok bisa?", "Masa sih?", "Serius?", "Yakin sudah benar?", "Yakin tidak menyesal?", "Yakin sudah cukup?", "Mau sampai kapan?", "Kapan lagi?", "Siapa lagi?",
+      "Tidakkah kamu sadar", "Tidakkah kamu lihat", "Tidakkah kamu tahu", "Sadarkah kita", "Tahukah anda", "Ingatkah anda", "Pahamilah", "Perhatikanlah", "Renungkanlah", "Simaklah",
+      "Apa yang terjadi jika", "Bagaimana nasib", "Apa langkah selanjutnya", "Kemana arahnya", "Apa rahasianya", "Apa kuncinya", "Apa intinya", "Apa pesannya", "Apa hikmahnya", "Apa pelajarannya",
+      "Tantang dirimu", "Uji nyalimu", "Buka pikiranmu", "Buka matamu", "Buka hatimu", "Buka wawasanmu", "Jangan tertipu", "Jangan terkecoh", "Jangan malas", "Jangan menyerah",
+      "Berpikir kritis", "Berpikir kreatif", "Berpikir luas", "Berpikir jauh", "Berpikir dalam", "Berpikir logis", "Berpikir positif", "Berpikir jernih", "Berpikir mandiri", "Berpikir cerdas"
+    ]
+    },
+
+    "contrast": {
+      "weight": 1,
+      "keywords": [
+        "bukan itu",
+        "sebaliknya",
+        "padahal",
+        "namun",
+        "tetapi",
+        "yang menarik",
+        "ironisnya","Dulu vs Sekarang", "Sebelum vs Sesudah", "Miskin vs Kaya", "Gagal vs Sukses", "Bodoh vs Pintar", "Malas vs Rajin", "Lama vs Cepat", "Sulit vs Mudah", "Mahal vs Murah", "Kuno vs Modern",
+      "Teori vs Praktek", "Ekspektasi vs Realita", "Mimpi vs Nyata", "Bohong vs Jujur", "Palsu vs Asli", "Jahat vs Baik", "Buruk vs Indah", "Kotor vs Bersih", "Gelap vs Terang", "Sedih vs Senang",
+      "Lemah vs Kuat", "Kecil vs Besar", "Sedikit vs Banyak", "Lokal vs Global", "Tradisional vs Digital", "Manual vs Otomatis", "Offline vs Online", "Pasif vs Aktif", "Konsumtif vs Produktif", "Rugi vs Untung",
+      "Masalah vs Solusi", "Bahaya vs Aman", "Risiko vs Peluang", "Hambatan vs Terobosan", "Kuno vs Canggih", "Rumit vs Simpel", "Abstrak vs Konkrit", "Umum vs Khusus", "Global vs Spesifik", "Muda vs Tua",
+      "Pemula vs Ahli", "Junior vs Senior", "Karyawan vs Pengusaha", "Bekerja vs Berbisnis", "Menabung vs Investasi", "Utang vs Aset", "Beban vs Pendapatan", "Pengeluaran vs Pemasukan", "Kalah vs Menang", "Gugur vs Tumbuh",
+      "Diam vs Gerak", "Takut vs Berani", "Ragu vs Yakin", "Nanti vs Sekarang", "Mungkin vs Pasti", "Biasa vs Luar Biasa", "Standar vs Eksklusif", "Umum vs Langka", "Murahan vs Mewah", "Pasaran vs Unik",
+      "Ikut-ikutan vs Mandiri", "Korban vs Pemenang", "Penonton vs Pemain", "Follower vs Leader", "Teori vs Aksi", "Rencana vs Eksekusi", "Mimpi vs Hasil", "Kata-kata vs Bukti", "Janji vs Realisasi", "Niat vs Amal",
+      "Luar vs Dalam", "Tampak vs Tersembunyi", "Fisik vs Mental", "Tubuh vs Jiwa", "Otak vs Hati", "Logika vs Perasaan", "Ego vs Empati", "Sendiri vs Bersama", "Konflik vs Damai", "Perang vs Harmoni",
+      "Sesaat vs Selamanya", "Sementara vs Abadi", "Dunia vs Akhirat", "Fana vs Nyata", "Fiksi vs Fakta", "Gosip vs Berita", "Opini vs Data", "Asumsi vs Bukti", "Mitos vs Realitas", "Khayalan vs Kebenaran",
+      "Awal vs Akhir", "Lahir vs Mati", "Tumbuh vs Layu", "Datang vs Pergi", "Buka vs Tutup", "Naik vs Turun", "Maju vs Mundur", "Kiri vs Kanan", "Atas vs Bawah", "Luar vs Dalam"
+      ]
+    },
+
+    "closing": {
+      "weight": 1,
+      "keywords": [
+        "jadi",
+        "itulah sebabnya",
+        "karena itu",
+        "akhirnya",
+        "pada akhirnya",
+        "itulah intinya",
+        "itulah pelajarannya","Save", "Share", "Follow", "Like", "Komen", "Subscribe", "Klik", "Daftar", "Beli", "Pesan",
+      "Hubungi", "Cek", "Intip", "Kunjungi", "Download", "Instal", "Cobain", "Praktekkan", "Buktikan", "Rasakan",
+      "Pilih", "Ketik", "Jawab", "Tanya", "Diskusi", "Tag", "Mention", "Repost", "Kirim", "Bagikan",
+      "Simpan", "Catat", "Ingat", "Waspada", "Gabung", "Join", "Klaim", "Tukarkan", "Gunakan", "Manfaatkan",
+      "Buruan", "Segera", "Cepat", "Bio", "Komentar", "Story", "Swipe", "Notifikasi", "Lonceng", "Formulir",
+      "Survey", "Vote", "Setuju?", "Benar?", "Pendapatmu?", "Pertanyaan?", "Pengalamanmu?", "Absen", "Spill", "Sebarkan",
+      "Rekomendasikan", "Grup", "Detailnya", "Admin", "Konsultasi", "Booking", "Reservasi", "Checkout", "COD", "Ongkir",
+      "Keranjang", "Borong", "Koleksi", "Update", "Part 2", "Lanjut?", "Penasaran?", "Amankan", "Mulai", "Sekarang",
+      "Jangan lewatkan", "Terbatas", "Klik disini", "Pelajari", "Baca", "Lihat", "Dapatkan", "Miliki", "Gunakan", "Coba",
+      "Buktikan", "Tunjukkan", "Action", "Eksekusi", "Gaskeun", "Sikat", "Ambil", "Ready", "Stok", "Habiskan"
+      ]
+    }
+  }
+}
